@@ -1,0 +1,131 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./css/listing.css";
+@import "./css/home-v2.css";
+
+:root {
+  --color-primary: #f73c4d;
+
+  /* Light Mode Colors (Default) */
+  --bg-page: #ffffff;
+  --bg-card-secondary: #f9fafb;
+  --text-default: #1a1a1a;
+  --text-secondary: #6b7280;
+  --border-default: #e5e7eb;
+}
+
+/* Dark Mode Overrides */
+html.dark {
+  --bg-page: #121212;
+  --bg-card-secondary: #1f2937;
+  --text-default: #ffffff;
+  --text-secondary: #9ca3af;
+  --border-default: #374151;
+}
+
+/* Set Inter as the default font and apply dynamic page background */
+body {
+  font-family: "Inter", sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Utilities using primary color */
+.text-primary {
+  color: var(--color-primary);
+}
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.hover\:bg-primary-dark:hover {
+  background-color: #e53140;
+}
+
+/* Custom shadow for premium look */
+.card-shadow {
+  box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-shadow:hover {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+/* Adjust shadow in dark mode */
+html.dark .card-shadow {
+  box-shadow: 0 10px 30px -15px rgba(255, 255, 255, 0.05);
+}
+
+.search-bar-container {
+  backdrop-filter: blur(10px);
+}
+
+/* --------------------------------- */
+/* Preloader Styles and Animation    */
+/* --------------------------------- */
+
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-page);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.loader {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  transform: rotate(-45deg); /* Tilt slightly for better visual */
+}
+
+.loader-ring {
+  width: 100%;
+  height: 100%;
+  border: 10px solid var(--border-default); /* Light grey ring base */
+  border-radius: 50%;
+  border-top-color: var(--color-primary); /* Active color */
+  border-right-color: var(--color-primary);
+  animation: spin 1.5s linear infinite;
+}
+
+.loader-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  transform: translate(
+    35px,
+    0
+  ); /* Position the dot on the right side of the ring */
+  animation: dot-move 1.5s linear infinite;
+}
+
+.loader-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text-default);
+  z-index: 10;
+}
+
+
+
+@import "./css/listing.css";
+@import "./css/home-v2.css";

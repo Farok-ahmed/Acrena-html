@@ -1,0 +1,15 @@
+/* Styling for the horizontal scroll property section */
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 1rem;
+  scrollbar-width: none; /* Firefox */
+}
+.horizontal-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+.scroll-item {
+  flex: 0 0 auto; /* Prevent items from shrinking */
+  width: 250px; /* Fixed width for scroll item */
+}
