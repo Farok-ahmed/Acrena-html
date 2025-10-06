@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acrena Estate - Modern Minimalist Real Estate</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- 
+        Tailwind Configuration: 
+        1. Enables dark mode via class switching (html.dark).
+        2. Maps custom utility names to CSS variables.
+    -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': 'var(--color-primary)',
+                        'page': 'var(--bg-page)',
+                        'hero-bg': 'var(--bg-hero)', /* New color for the hero's rounded container */
+                        'card-secondary': 'var(--bg-card-secondary)',
+                        'default': 'var(--text-default)',
+                        'secondary': 'var(--text-secondary)',
+                        'border-default': 'var(--border-default)',
+                        'contrast-light': 'var(--bg-contrast-light)', /* For the value prop/stats section */
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- CSS Variables Definition for Reusability --- */
+
+        /* Branding Color */
+        :root {
+            --color-primary: #f73c4d; 
+            
+            /* Light Mode Colors (Default) */
+            --bg-page: #ffffff;
+            --bg-hero: #e6eef1; /* Light blue-grey for the rounded hero container */
+            --bg-contrast-light: #fff8f8; /* Pale pink for the stats section */
+            --bg-card-secondary: #f9fafb;
+            --text-default: #1a1a1a;
+            --text-secondary: #6b7280; 
+            --border-default: #e5e7eb; 
+        }
+
+        /* Dark Mode Overrides */
+        html.dark {
+            --bg-page: #121212;
+            --bg-hero: #2a343a; /* Dark blue-grey for the rounded hero container */
+            --bg-contrast-light: #2c2525; /* Dark contrast */
+            --bg-card-secondary: #1f2937;
+            --text-default: #ffffff; 
+            --text-secondary: #9ca3af; 
+            --border-default: #374151;
+        }
+
+        /* Set Inter as the default font and apply dynamic page background */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Utilities using primary color */
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+        .hover\:bg-primary-dark:hover { background-color: #e53140; }
+
+        /* Custom shadow for premium look */
+        .card-shadow {
+            box-shadow: 0 5px 20px -5px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-shadow:hover {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+        }
+        
+        /* Adjust shadow in dark mode */
+        html.dark .card-shadow {
+             box-shadow: 0 5px 20px -5px rgba(255, 255, 255, 0.03); 
+        }
+
+        /* --------------------------------- */
+        /* Preloader Styles and Animation    */
+        /* --------------------------------- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-page);
+            z-index: 9999; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            transform: rotate(-45deg); 
+        }
+        
+        .loader-ring {
+            width: 100%;
+            height: 100%;
+            border: 10px solid var(--border-default); 
+            border-radius: 50%;
+            border-top-color: var(--color-primary); 
+            border-right-color: var(--color-primary);
+            animation: spin 1.5s linear infinite;
+        }
+        
+        .loader-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: var(--color-primary);
+            border-radius: 50%;
+            transform: translate(35px, 0); 
+            animation: dot-move 1.5s linear infinite;
+        }
+        
+        .loader-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-default);
+            z-index: 10;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes dot-move {
+            0% { transform: translate(60px, 0) rotate(0deg); }
+            100% { transform: translate(60px, 0) rotate(360deg); }
+        }
+
+        /* Styling for the horizontal scroll property section */
+        .horizontal-scroll {
+            display: flex;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 1rem;
+            scrollbar-width: none; /* Firefox */
+        }
+        .horizontal-scroll::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        .scroll-item {
+            flex: 0 0 auto; /* Prevent items from shrinking */
+            width: 250px; /* Fixed width for scroll item */
+        }
+    </style>
+</head>
+<body class="bg-page text-default">
+
+    <!-- Preloader Overlay -->
+    <div id="preloader">
+        <div class="loader">
+            <div class="loader-ring"></div>
+            <div class="loader-dot"></div>
+            <div class="loader-logo">
+                <span class="text-primary font-bold">A</span>
+                <span class="text-default font-bold">crena</span>
+            </div>
+        </div>
+        <p class="mt-8 text-xl text-default font-semibold">Loading Acrena Estate...</p>
+    </div>
+    <!-- End Preloader -->
+
+
+    <!-- Primary Navigation Bar (Minimalist) -->
+    <header class="sticky top-0 z-50 bg-page/90 backdrop-blur-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-2 text-default">
+                    <i class="fa-solid fa-house-chimney text-2xl text-primary"></i>
+                    <span class="text-2xl font-extrabold tracking-tight">Acrena</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden lg:flex space-x-6 text-base font-medium">
+                    <a href="#" class="text-default hover:text-primary transition duration-150">Home</a>
+                    <a href="#" class="text-default hover:text-primary transition duration-150">Listings</a>
+                    <a href="#" class="text-default hover:text-primary transition duration-150">Agents</a>
+                    <a href="#" class="text-default hover:text-primary transition duration-150">Contact</a>
+                </nav>
+
+                <!-- CTA Button & Mobile Toggle & Theme Switch -->
+                <div class="flex items-center space-x-4">
+                    <!-- Dark Mode Toggle Button -->
+                    <button id="theme-toggle" class="p-2 rounded-full text-default hover:bg-card-secondary transition duration-150">
+                        <i id="theme-icon" class="fa-solid text-xl"></i>
+                    </button>
+                    
+                    <button class="hidden lg:block bg-primary text-white py-2 px-5 rounded-lg font-semibold hover:bg-primary-dark transition duration-150 card-shadow text-sm">
+                        Add Listing
+                    </button>
+                    <button id="mobile-menu-button" class="lg:hidden p-2 rounded-lg text-default hover:bg-card-secondary transition duration-150">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-page shadow-xl border-t border-border-default">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-default hover:bg-card-secondary">Home</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-default hover:bg-card-secondary">Listings</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-default hover:bg-card-secondary">Agents</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-default hover:bg-card-secondary">Contact</a>
+                <button class="w-full bg-primary text-white mt-4 py-2 px-6 rounded-lg font-semibold hover:bg-primary-dark transition duration-150">
+                    Add Listing
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section: Large Rounded Container -->
+    <section class="pt-6 pb-16 md:pb-24 lg:pb-32 overflow-hidden bg-page">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-hero rounded-[40px] md:rounded-[60px] relative pt-16 md:pt-24 pb-48 overflow-hidden">
+                <div class="absolute inset-0 bg-cover bg-center opacity-10 rounded-[40px] md:rounded-[60px]" style="background-image: url('https://placehold.co/1200x600/1a1a1a/ffffff?text=Modern+House+Concept');"></div>
+                <div class="relative z-10 text-center max-w-4xl mx-auto px-4">
+                    <h1 class="text-4xl md:text-5xl font-extrabold leading-tight text-default mt-2 mb-6">
+                        Easy Way to Find a Perfect Property
+                    </h1>
+                    <p class="text-secondary text-lg mb-10">
+                        Search and explore over 50,000 verified listings worldwide.
+                    </p>
+
+                    <!-- Search Bar -->
+                    <div class="bg-page p-2 md:p-3 rounded-full shadow-2xl mx-auto max-w-3xl border border-border-default transform translate-y-16 md:translate-y-24">
+                        <div class="flex flex-col md:flex-row items-center w-full">
+                            <!-- Location Input -->
+                            <div class="flex-1 p-2 md:px-4 md:py-1 w-full md:w-auto">
+                                <input type="text" placeholder="Enter City, Zip, or Address" class="w-full text-base focus:outline-none placeholder-secondary bg-page text-default">
+                            </div>
+                            <!-- Search Button -->
+                            <button class="bg-primary text-white w-full md:w-auto py-3 md:py-4 px-8 rounded-full font-bold hover:bg-primary-dark transition duration-200 mt-2 md:mt-0 card-shadow">
+                                Search Property
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mock image to complete the visual design -->
+                <img src="https://placehold.co/400x250/374151/ffffff?text=Property+Image" alt="Hero Property" class="absolute bottom-0 right-10 hidden md:block w-96 rounded-t-[40px] shadow-2xl">
+            </div>
+        </div>
+    </section>
+
+    <!-- Property Categories (Located directly below the Hero Search Bar) -->
+    <section class="pb-16 pt-0 md:pt-16 bg-page">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+             <h2 class="text-2xl font-bold text-center mb-8 text-default">Property Types</h2>
+            <div class="flex flex-wrap justify-center gap-6">
+                
+                <!-- Category Card -->
+                <div class="flex flex-col items-center group cursor-pointer w-24">
+                    <div class="p-4 rounded-full bg-card-secondary group-hover:bg-primary transition duration-200 card-shadow">
+                        <i class="fa-solid fa-house-chimney text-xl text-primary group-hover:text-white transition duration-200"></i>
+                    </div>
+                    <p class="font-semibold text-sm text-default mt-2 group-hover:text-primary transition duration-200">House</p>
+                    <p class="text-xs text-secondary">250 listings</p>
+                </div>
+                <div class="flex flex-col items-center group cursor-pointer w-24">
+                    <div class="p-4 rounded-full bg-card-secondary group-hover:bg-primary transition duration-200 card-shadow">
+                        <i class="fa-solid fa-building text-xl text-primary group-hover:text-white transition duration-200"></i>
+                    </div>
+                    <p class="font-semibold text-sm text-default mt-2 group-hover:text-primary transition duration-200">Apartment</p>
+                    <p class="text-xs text-secondary">180 listings</p>
+                </div>
+                <div class="flex flex-col items-center group cursor-pointer w-24">
+                    <div class="p-4 rounded-full bg-card-secondary group-hover:bg-primary transition duration-200 card-shadow">
+                        <i class="fa-solid fa-hotel text-xl text-primary group-hover:text-white transition duration-200"></i>
+                    </div>
+                    <p class="font-semibold text-sm text-default mt-2 group-hover:text-primary transition duration-200">Villa</p>
+                    <p class="text-xs text-secondary">95 listings</p>
+                </div>
+                <div class="flex flex-col items-center group cursor-pointer w-24">
+                    <div class="p-4 rounded-full bg-card-secondary group-hover:bg-primary transition duration-200 card-shadow">
+                        <i class="fa-solid fa-briefcase text-xl text-primary group-hover:text-white transition duration-200"></i>
+                    </div>
+                    <p class="font-semibold text-sm text-default mt-2 group-hover:text-primary transition duration-200">Office</p>
+                    <p class="text-xs text-secondary">60 listings</p>
+                </div>
+                <div class="flex flex-col items-center group cursor-pointer w-24">
+                    <div class="p-4 rounded-full bg-card-secondary group-hover:bg-primary transition duration-200 card-shadow">
+                        <i class="fa-solid fa-tent text-xl text-primary group-hover:text-white transition duration-200"></i>
+                    </div>
+                    <p class="font-semibold text-sm text-default mt-2 group-hover:text-primary transition duration-200">Land</p>
+                    <p class="text-xs text-secondary">45 listings</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Properties Grid -->
+    <section class="py-16 bg-page">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-default mb-10">Discover Popular Properties</h2>
+            
+            <div id="property-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Single Property Card (Repeat 3 times for the design concept) -->
+                <!-- Card 1 -->
+                <div class="bg-page rounded-xl overflow-hidden card-shadow border border-border-default">
+                    <div class="relative h-60">
+                        <img src="https://placehold.co/600x400/f5f5f5/f73c4d?text=Luxury+Apartment" alt="Property 1" class="w-full h-full object-cover">
+                        <span class="absolute top-4 left-4 bg-primary text-white text-sm font-bold py-1 px-3 rounded-full">\1,250,000</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-default mb-2 hover:text-primary transition duration-150 cursor-pointer">Modern Loft in Downtown</h3>
+                        <p class="text-secondary text-sm mb-4 flex items-center"><i class="fa-solid fa-location-dot mr-2"></i>New York, USA</p>
+                        
+                        <div class="flex justify-between text-secondary text-sm border-t border-b border-border-default py-3 mb-4">
+                            <span class="flex items-center"><i class="fa-solid fa-bed mr-1 text-primary"></i> 3 Beds</span>
+                            <span class="flex items-center"><i class="fa-solid fa-bath mr-1 text-primary"></i> 2 Baths</span>
+                            <span class="flex items-center"><i class="fa-solid fa-maximize mr-1 text-primary"></i> 1800 sqft</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-secondary">
+                            <span class="flex items-center">
+                                <img src="https://placehold.co/30x30/ddd/333?text=A" alt="Agent Avatar" class="rounded-full mr-2">
+                                <span>Agent A</span>
+                            </span>
+                            <span class="text-primary font-semibold">For Sale</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-page rounded-xl overflow-hidden card-shadow border border-border-default">
+                    <div class="relative h-60">
+                        <img src="https://placehold.co/600x400/f5f5f5/f73c4d?text=Family+House" alt="Property 2" class="w-full h-full object-cover">
+                        <span class="absolute top-4 left-4 bg-primary text-white text-sm font-bold py-1 px-3 rounded-full">\950,000</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-default mb-2 hover:text-primary transition duration-150 cursor-pointer">Spacious Suburban Residence</h3>
+                        <p class="text-secondary text-sm mb-4 flex items-center"><i class="fa-solid fa-location-dot mr-2"></i>Los Angeles, USA</p>
+                        
+                        <div class="flex justify-between text-secondary text-sm border-t border-b border-border-default py-3 mb-4">
+                            <span class="flex items-center"><i class="fa-solid fa-bed mr-1 text-primary"></i> 4 Beds</span>
+                            <span class="flex items-center"><i class="fa-solid fa-bath mr-1 text-primary"></i> 3 Baths</span>
+                            <span class="flex items-center"><i class="fa-solid fa-maximize mr-1 text-primary"></i> 2500 sqft</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-secondary">
+                            <span class="flex items-center">
+                                <img src="https://placehold.co/30x30/ddd/333?text=B" alt="Agent Avatar" class="rounded-full mr-2">
+                                <span>Agent B</span>
+                            </span>
+                            <span class="text-primary font-semibold">For Sale</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-page rounded-xl overflow-hidden card-shadow border border-border-default">
+                    <div class="relative h-60">
+                        <img src="https://placehold.co/600x400/f5f5f5/f73c4d?text=Modern+Villa" alt="Property 3" class="w-full h-full object-cover">
+                        <span class="absolute top-4 left-4 bg-primary text-white text-sm font-bold py-1 px-3 rounded-full">\3,500,000</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-default mb-2 hover:text-primary transition duration-150 cursor-pointer">Coastal Luxury Villa</h3>
+                        <p class="text-secondary text-sm mb-4 flex items-center"><i class="fa-solid fa-location-dot mr-2"></i>Miami, USA</p>
+                        
+                        <div class="flex justify-between text-secondary text-sm border-t border-b border-border-default py-3 mb-4">
+                            <span class="flex items-center"><i class="fa-solid fa-bed mr-1 text-primary"></i> 5 Beds</span>
+                            <span class="flex items-center"><i class="fa-solid fa-bath mr-1 text-primary"></i> 4 Baths</span>
+                            <span class="flex items-center"><i class="fa-solid fa-maximize mr-1 text-primary"></i> 4200 sqft</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-secondary">
+                            <span class="flex items-center">
+                                <img src="https://placehold.co/30x30/ddd/333?text=C" alt="Agent Avatar" class="rounded-full mr-2">
+                                <span>Agent C</span>
+                            </span>
+                            <span class="text-primary font-semibold">For Sale</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                 <button class="bg-primary text-white py-3 px-8 rounded-lg font-semibold hover:bg-primary-dark transition duration-200 card-shadow">
+                    Explore All Properties
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us / Value Proposition / Stats Section (Contrast Background) -->
+    <section class="py-16 bg-contrast-light">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row rounded-3xl overflow-hidden bg-page card-shadow">
+                <!-- Text and Stats Side -->
+                <div class="lg:w-1/2 p-8 md:p-12">
+                    <h2 class="text-3xl font-bold text-default mb-4">Let's find the right living space for you</h2>
+                    <p class="text-secondary mb-8 leading-relaxed">
+                        Acrena provides all the tools, resources, and expert knowledge you need for a stress-free home buying journey. We make the complex simple.
+                    </p>
+                    
+                    <div class="space-y-4 mb-10">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-check-circle text-2xl text-primary mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-default">Dedicated Client Support</h4>
+                                <p class="text-secondary text-sm">24/7 expert support available for all inquiries.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-check-circle text-2xl text-primary mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-default">Verified Property Listings</h4>
+                                <p class="text-secondary text-sm">All listings are thoroughly inspected and verified.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="flex justify-start space-x-10">
+                         <!-- Stat 1 -->
+                        <div class="text-left">
+                            <p class="text-4xl font-extrabold text-primary mb-1">400+</p>
+                            <p class="text-sm font-semibold text-secondary">Projects Done</p>
+                        </div>
+                        <!-- Stat 2 -->
+                        <div class="text-left">
+                            <p class="text-4xl font-extrabold text-primary mb-1">200+</p>
+                            <p class="text-sm font-semibold text-secondary">Trusted Agents</p>
+                        </div>
+                        <!-- Stat 3 -->
+                        <div class="text-left">
+                            <p class="text-4xl font-extrabold text-primary mb-1">10k+</p>
+                            <p class="text-sm font-semibold text-secondary">Happy Clients</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Side -->
+                <div class="lg:w-1/2 h-80 lg:h-auto relative">
+                    <img src="https://placehold.co/700x500/1a1a1a/ffffff?text=Happy+Couple" alt="Happy Couple" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Explore Apartment Types (Horizontal Scroll) -->
+    <section class="py-16 bg-page">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-default mb-8">Explore Apartment Types</h2>
+            
+            <div class="horizontal-scroll space-x-6">
+                
+                <!-- Scroll Item 1 -->
+                <div class="scroll-item bg-page rounded-xl overflow-hidden card-shadow border border-border-default">
+                    <img src="https://placehold.co/250x180/e6eef1/f73c4d?text=Studio" alt="Studio" class="w-full h-36 object-cover">
+                    <div class="p-4">
+                        <h4 class="font-bold text-default">Studio Apartment</h4>
+                        <p class="text-secondary text-sm">1-2 Beds | Ideal for singles</p>
+                    </div>
+                </div>
+
+                <!-- Scroll Item 2 -->
+                <div class="scroll-item bg-page rounded-xl overflow-hidden card-shadow border border-border-default">
+                    <img src="https://placehold.co/250x180/e6eef1/f73c4d?text=Loft" alt="Loft" class="w-full h-36 object-cover">
+                    <div class="p-4">
+                        <h4 class="font-bold text-default">Industrial Loft</h4>
+                        <p class="text-secondary text-sm">Open concept | Modern design</p>
+                    </div>
+                </div>
+                
+                <!-- Scroll Item 3 -->
+                <div class="scroll-item bg-page rounded-xl overflow-hidden card-shadow border border-border-default">
+                    <img src="https://placehold.co/250x180/e6eef1/f73c4d?text=Duplex" alt="Duplex" class="w-full h-36 object-cover">
+                    <div class="p-4">
+                        <h4 class="font-bold text-default">Duplex / Penthouse</h4>
+                        <p class="text-secondary text-sm">Multi-level luxury units</p>
+                    </div>
+                </div>
+                
+                <!-- Scroll Item 4 -->
+                <div class="scroll-item bg-page rounded-xl overflow-hidden card-shadow border border-border-default">
+                    <img src="https://placehold.co/250x180/e6eef1/f73c4d?text=Garden" alt="Garden" class="w-full h-36 object-cover">
+                    <div class="p-4">
+                        <h4 class="font-bold text-default">Ground Floor Apt</h4>
+                        <p class="text-secondary text-sm">Direct garden access</p>
+                    </div>
+                </div>
+                
+                <!-- Scroll Item 5 -->
+                <div class="scroll-item bg-page rounded-xl overflow-hidden card-shadow border border-border-default">
+                    <img src="https://placehold.co/250x180/e6eef1/f73c4d?text=Highrise" alt="Highrise" class="w-full h-36 object-cover">
+                    <div class="p-4">
+                        <h4 class="font-bold text-default">High-Rise View</h4>
+                        <p class="text-secondary text-sm">Premium city views</p>
+                    </div>
+                </div>
+                
+                <!-- Scroll Item 6 -->
+                <div class="scroll-item bg-page rounded-xl overflow-hidden card-shadow border border-border-default">
+                    <img src="https://placehold.co/250x180/e6eef1/f73c4d?text=Suburban" alt="Suburban" class="w-full h-36 object-cover">
+                    <div class="p-4">
+                        <h4 class="font-bold text-default">Suburban Flats</h4>
+                        <p class="text-secondary text-sm">Quiet, family-friendly areas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agent & Testimonial Section -->
+    <section class="py-20 bg-card-secondary">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Testimonial / Find Agent -->
+                <div class="p-6 md:p-10 bg-page rounded-2xl border border-border-default card-shadow relative">
+                    <span class="text-sm font-semibold text-primary uppercase tracking-wider mb-4 block">Client Success</span>
+                    <h3 class="text-3xl font-bold text-default mb-6">Find the right agent at the right time</h3>
+                    
+                    <div class="space-y-4 mb-8">
+                        <!-- Testimonial 1 -->
+                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-card-secondary transition duration-150 cursor-pointer border-b border-border-default">
+                            <img src="https://placehold.co/40x40/ddd/1a1a1a?text=J" alt="Client J" class="rounded-full">
+                            <div>
+                                <p class="font-semibold text-default">John & Sarah Doe</p>
+                                <p class="text-sm text-secondary">"Fast sale, great price!"</p>
+                            </div>
+                        </div>
+                        <!-- Testimonial 2 -->
+                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-card-secondary transition duration-150 cursor-pointer border-b border-border-default">
+                            <img src="https://placehold.co/40x40/ddd/1a1a1a?text=M" alt="Client M" class="rounded-full">
+                            <div>
+                                <p class="font-semibold text-default">Michael B.</p>
+                                <p class="text-sm text-secondary">"The best agents in the city."</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-dark transition duration-200">
+                        View All Agents
+                    </button>
+                    <!-- Mock agent image in the background -->
+                    <img src="https://placehold.co/200x200/9ca3af/ffffff?text=Agent+Mock" alt="Agent Mockup" class="hidden lg:block absolute bottom-0 right-0 opacity-10 transform translate-x-1/4 translate-y-1/4">
+                </div>
+
+                <!-- Agent Profile / Large Quote -->
+                <div class="flex flex-col justify-center h-full">
+                    <img src="https://placehold.co/80x80/f73c4d/ffffff?text=E" alt="Agent Emily" class="w-20 h-20 object-cover rounded-full shadow-lg mb-6 border-4 border-page">
+                    <p class="italic text-2xl font-medium text-default mb-6 leading-relaxed">
+                        "We believe in honest advice and successful partnerships. Let's start your journey to your perfect home today."
+                    </p>
+                    <p class="font-bold text-default text-xl">Emily Carter</p>
+                    <p class="text-primary text-md">Lead Real Estate Agent</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Locations & Blog Preview Section -->
+    <section class="py-16 bg-page">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                
+                <!-- Popular Locations -->
+                <div>
+                    <h3 class="text-2xl font-bold text-default mb-6">Popular Locations</h3>
+                    <ul class="space-y-3 text-secondary">
+                        <li><a href="#" class="hover:text-primary transition duration-150">New York, USA (120)</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Los Angeles, USA (85)</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Miami, USA (45)</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Chicago, USA (60)</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Toronto, CAN (30)</a></li>
+                    </ul>
+                </div>
+
+                <!-- Featured Agents -->
+                <div>
+                    <h3 class="text-2xl font-bold text-default mb-6">Featured Agents</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://placehold.co/40x40/ddd/1a1a1a?text=S" alt="Agent S" class="rounded-full">
+                            <div>
+                                <p class="font-semibold text-default">Sarah Chen</p>
+                                <p class="text-sm text-secondary">54 Sales | Luxury</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <img src="https://placehold.co/40x40/ddd/1a1a1a?text=D" alt="Agent D" class="rounded-full">
+                            <div>
+                                <p class="font-semibold text-default">David Lee</p>
+                                <p class="text-sm text-secondary">78 Sales | Apartments</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <img src="https://placehold.co/40x40/ddd/1a1a1a?text=R" alt="Agent R" class="rounded-full">
+                            <div>
+                                <p class="font-semibold text-default">Ricardo Gomez</p>
+                                <p class="text-sm text-secondary">42 Sales | Land</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- From Our Blog -->
+                <div>
+                    <h3 class="text-2xl font-bold text-default mb-6">From Our Blog</h3>
+                    <div class="space-y-4">
+                        <a href="#" class="block text-default hover:text-primary transition duration-150">
+                            <p class="font-semibold">The 2025 Market Predictions</p>
+                            <p class="text-xs text-secondary">Aug 15, 2024</p>
+                        </a>
+                        <a href="#" class="block text-default hover:text-primary transition duration-150">
+                            <p class="font-semibold">Guide to First-Time Home Buying</p>
+                            <p class="text-xs text-secondary">Aug 10, 2024</p>
+                        </a>
+                        <a href="#" class="block text-default hover:text-primary transition duration-150">
+                            <p class="font-semibold">Top 5 Neighborhoods for Families</p>
+                            <p class="text-xs text-secondary">Aug 01, 2024</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-card-secondary text-default pt-20 pb-10 border-t border-border-default">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-10 border-b border-border-default pb-10 mb-8">
+                
+                <!-- Brand Info -->
+                <div class="col-span-2 md:col-span-2 pr-8">
+                    <a href="#" class="flex items-center space-x-2 text-default mb-4">
+                        <i class="fa-solid fa-house-chimney text-3xl text-primary"></i>
+                        <span class="text-3xl font-extrabold tracking-tight">Acrena</span>
+                    </a>
+                    <p class="text-secondary text-sm mb-6">
+                        Acrena Estate is your trusted partner for successful real estate journeys. We focus on transparency and client success.
+                    </p>
+                    
+                    <!-- App Download Mock -->
+                    <h5 class="font-bold mb-3 text-default">Download Our App</h5>
+                    <div class="flex flex-col space-y-2">
+                        <button class="flex items-center bg-default text-white py-2 px-4 rounded-lg hover:bg-[#333] transition duration-150">
+                            <i class="fa-brands fa-apple text-xl mr-2"></i>
+                            <span class="text-xs">Download on the<br><strong class="text-sm">App Store</strong></span>
+                        </button>
+                         <button class="flex items-center bg-default text-white py-2 px-4 rounded-lg hover:bg-[#333] transition duration-150">
+                            <i class="fa-brands fa-google-play text-xl mr-2"></i>
+                            <span class="text-xs">Get it on<br><strong class="text-sm">Google Play</strong></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Company Links -->
+                <div>
+                    <h5 class="text-lg font-bold mb-5 text-default">Company</h5>
+                    <ul class="space-y-3 text-sm text-secondary">
+                        <li><a href="#" class="hover:text-primary transition duration-150">About Us</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">How It Works</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Our Team</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Careers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services Links -->
+                <div>
+                    <h5 class="text-lg font-bold mb-5 text-default">For Buyers</h5>
+                    <ul class="space-y-3 text-sm text-secondary">
+                        <li><a href="#" class="hover:text-primary transition duration-150">Find a Home</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Mortgage Services</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Property Alerts</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Neighborhood Guides</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources Links -->
+                <div>
+                    <h5 class="text-lg font-bold mb-5 text-default">For Sellers</h5>
+                    <ul class="space-y-3 text-sm text-secondary">
+                        <li><a href="#" class="hover:text-primary transition duration-150">List Your Property</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Agent Network</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Free Valuation</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Success Stories</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Copyright and Social Icons -->
+            <div class="flex flex-col md:flex-row justify-between items-center text-sm text-secondary">
+                <p>&copy; 2024 Acrena Estate. All rights reserved. Theme Concept by Gemini.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="text-secondary hover:text-primary transition duration-150"><i class="fa-brands fa-facebook-f text-lg"></i></a>
+                    <a href="#" class="text-secondary hover:text-primary transition duration-150"><i class="fa-brands fa-twitter text-lg"></i></a>
+                    <a href="#" class="text-secondary hover:text-primary transition duration-150"><i class="fa-brands fa-instagram text-lg"></i></a>
+                    <a href="#" class="text-secondary hover:text-primary transition duration-150"><i class="fa-brands fa-linkedin-in text-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        // jQuery for interactive elements (Mobile Menu, Tabs, and Dark Mode)
+        $(document).ready(function() {
+            const html = $('html');
+            const toggleButton = $('#theme-toggle');
+            const themeIcon = $('#theme-icon');
+            const preloader = $('#preloader');
+
+            // 1. Preloader Logic
+            // Simulate loading time (e.g., 1000ms or 1 second) before fading out
+            setTimeout(() => {
+                preloader.css('opacity', 0);
+                // After fade-out, hide it completely so it doesn't block clicks
+                setTimeout(() => {
+                    preloader.css('display', 'none');
+                }, 500); 
+            }, 1000); // 1 second delay for a smooth transition
+
+
+            // 2. Dark Mode Initialization and Persistence
+            function initTheme() {
+                const preferredTheme = localStorage.getItem('theme');
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                let isDarkMode = (preferredTheme === 'dark') || (!preferredTheme && systemPrefersDark);
+
+                if (isDarkMode) {
+                    html.addClass('dark');
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                } else {
+                    html.removeClass('dark');
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                }
+            }
+            
+            // Toggle function
+            toggleButton.on('click', function() {
+                html.toggleClass('dark');
+                const currentTheme = html.hasClass('dark') ? 'dark' : 'light';
+                localStorage.setItem('theme', currentTheme);
+
+                if (currentTheme === 'dark') {
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                } else {
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                }
+            });
+
+            initTheme();
+
+
+            // 3. Mobile Menu Toggle
+            $('#mobile-menu-button').on('click', function() {
+                $('#mobile-menu').slideToggle(300);
+            });
+        });
+    </script>
+
+</body>
+</html>
