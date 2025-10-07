@@ -1,10 +1,16 @@
 {
+  "name": "acrena-estate",
+  "version": "1.0.0",
+  "description": "Modern Real Estate Website with Tailwind CSS v4",
+  "scripts": {
+    "dev": "tailwindcss -i ./src/input.css -o ./src/output.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./src/output.css --minify",
+    "build:css": "tailwindcss -i ./src/input.css -o ./src/output.css",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./src/output.css --watch"
+  },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.14",
     "tailwindcss": "^4.1.14"
   },
-  "scripts": {
-    "build:css": "tailwindcss -i ./src/input.css -o ./src/output.css",
-    "watch:css": "tailwindcss -i ./src/input.css -o ./src/output.css --watch"
-  }
+  "devDependencies": {}
 }

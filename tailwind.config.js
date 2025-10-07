@@ -1,18 +1,12 @@
-// tailwind.config.js
+// tailwind.config.js (Tailwind v4)
+// In v4, most configuration is done in CSS using @theme
+// This file is optional but kept for backward compatibility
 module.exports = {
   darkMode: "class",
+  content: ["./src/**/*.{html,js}"],
   theme: {
     extend: {
-      colors: {
-        primary: "var(--color-primary)",
-        page: "var(--bg-page)",
-        hero: "var(--bg-hero)", // hero section background
-        "card-secondary": "var(--bg-card-secondary)",
-        default: "var(--text-default)",
-        secondary: "var(--text-secondary)",
-        "border-default": "var(--border-default)",
-        "contrast-light": "var(--bg-contrast-light)", // light contrast sections
-      },
+      // Custom animations for preloader
       keyframes: {
         spin: {
           "0%": { transform: "rotate(0deg)" },
