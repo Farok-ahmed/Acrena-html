@@ -1,49 +1,129 @@
-@import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ===========================================
+   Tailwind CSS v4 - Main Entry Point
+   =========================================== */
 
+/* Import Tailwind CSS v4 */
+@import "tailwindcss";
+
+/* ===========================================
+   Tailwind v4 Theme Configuration
+   All configuration in CSS - No config file needed!
+   =========================================== */
+
+@theme {
+  /* Enable dark mode with class-based switching */
+  --color-scheme: light dark;
+}
+
+/* Import custom CSS files */
 @import "./css/listing.css";
 @import "./css/home-v2.css";
 
-:root {
-  --color-primary: #f73c4d;
+/* ===========================================
+   CSS Custom Properties (Design Tokens)
+   =========================================== */
 
-  /* Light Mode Colors (Default) */
+:root {
+  /* Primary Brand Color */
+  --color-primary: #f73c4d;
+  --color-primary-dark: #e53140;
+
+  /* Light Mode Colors */
   --bg-page: #ffffff;
+  --bg-hero: #f5f5f5;
   --bg-card-secondary: #f9fafb;
+  --bg-contrast-light: #fafafa;
+  
+  /* Text Colors */
   --text-default: #1a1a1a;
   --text-secondary: #6b7280;
+  
+  /* Border Colors */
   --border-default: #e5e7eb;
 }
 
 /* Dark Mode Overrides */
 html.dark {
   --bg-page: #121212;
+  --bg-hero: #0a0a0a;
   --bg-card-secondary: #1f2937;
+  --bg-contrast-light: #1a1a1a;
   --text-default: #ffffff;
   --text-secondary: #9ca3af;
   --border-default: #374151;
 }
 
-/* Set Inter as the default font and apply dynamic page background */
+/* ===========================================
+   Base Styles
+   =========================================== */
+
 body {
   font-family: "Inter", sans-serif;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Utilities using primary color */
-.text-primary {
-  color: var(--color-primary);
+/* ===========================================
+   Custom Utility Classes
+   =========================================== */
+
+/* Background Colors */
+.bg-page {
+  background-color: var(--bg-page);
 }
+
+.bg-hero {
+  background-color: var(--bg-hero);
+}
+
+.bg-card-secondary {
+  background-color: var(--bg-card-secondary);
+}
+
+.bg-contrast-light {
+  background-color: var(--bg-contrast-light);
+}
+
 .bg-primary {
   background-color: var(--color-primary);
 }
-.hover\:bg-primary-dark:hover {
-  background-color: #e53140;
+
+/* Text Colors */
+.text-default {
+  color: var(--text-default);
 }
 
-/* Custom shadow for premium look */
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+/* Border Colors */
+.border-border-default {
+  border-color: var(--border-default);
+}
+
+/* Placeholder Color */
+.placeholder-secondary::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* ===========================================
+   Interactive Utilities
+   =========================================== */
+
+.hover\:bg-primary-dark:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* ===========================================
+   Custom Components
+   =========================================== */
+
+/* Card Shadow Effect */
 .card-shadow {
   box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -54,18 +134,45 @@ body {
   transform: translateY(-5px);
 }
 
-/* Adjust shadow in dark mode */
 html.dark .card-shadow {
   box-shadow: 0 10px 30px -15px rgba(255, 255, 255, 0.05);
 }
 
-.search-bar-container {
-  backdrop-filter: blur(10px);
+html.dark .card-shadow:hover {
+  box-shadow: 0 15px 35px -10px rgba(255, 255, 255, 0.08);
 }
 
-/* --------------------------------- */
-/* Preloader Styles and Animation    */
-/* --------------------------------- */
+/* Search Bar Container */
+.search-bar-container {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ===========================================
+   Custom Animations (Tailwind v4 CSS-first)
+   =========================================== */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dot-move {
+  from {
+    transform: translate(60px, 0) rotate(0deg);
+  }
+  to {
+    transform: translate(60px, 0) rotate(360deg);
+  }
+}
+
+/* ===========================================
+   Preloader Styles & Animations
+   =========================================== */
 
 #preloader {
   position: fixed;
@@ -86,15 +193,15 @@ html.dark .card-shadow {
   width: 120px;
   height: 120px;
   position: relative;
-  transform: rotate(-45deg); /* Tilt slightly for better visual */
+  transform: rotate(-45deg);
 }
 
 .loader-ring {
   width: 100%;
   height: 100%;
-  border: 10px solid var(--border-default); /* Light grey ring base */
+  border: 10px solid var(--border-default);
   border-radius: 50%;
-  border-top-color: var(--color-primary); /* Active color */
+  border-top-color: var(--color-primary);
   border-right-color: var(--color-primary);
   animation: spin 1.5s linear infinite;
 }
@@ -107,10 +214,7 @@ html.dark .card-shadow {
   height: 10px;
   background-color: var(--color-primary);
   border-radius: 50%;
-  transform: translate(
-    35px,
-    0
-  ); /* Position the dot on the right side of the ring */
+  transform: translate(35px, 0);
   animation: dot-move 1.5s linear infinite;
 }
 
@@ -124,8 +228,3 @@ html.dark .card-shadow {
   color: var(--text-default);
   z-index: 10;
 }
-
-
-
-@import "./css/listing.css";
-@import "./css/home-v2.css";
